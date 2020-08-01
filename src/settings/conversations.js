@@ -6,6 +6,21 @@ export const conversations = [
         human: false,
         type: 'message',
         options: {
+          content: 'チャチャットによって最適化されたフォームでCVRを爆上げ！'
+        }
+      },
+      {
+        human: false,
+        type: 'message',
+        options: {
+          content: 'ただま今より、ECサイトへの導入サンプルを開始します。メッセージにしたがってお楽しみください。(※ご入力いただいた情報は送信されませんのでご安心ください。)'
+        }
+      },
+      {
+        human: false,
+        type: 'message',
+        options: {
+          delay: 3000,
           content: 'いらっしゃいませ！案内にしたがってお手続きください。'
         }
       },
@@ -13,7 +28,16 @@ export const conversations = [
         human: false,
         type: 'message',
         options: {
+          delay: 1000,
           content: 'ご購入完了まで、私がお手伝いさせていただきます。'
+        }
+      },
+      {
+        human: false,
+        type: 'message',
+        options: {
+          delay: 1000,
+          content: '入力はたった90秒で完了です！'
         }
       }
     ]
@@ -21,19 +45,26 @@ export const conversations = [
   {
     id: 'userInfo-gender',
     trigger: 'hello',
+    countable: true,
     actions: [
       {
         human: false,
         type: 'message',
         options: {
-          content: 'まずはあなたの性別を教えて下さい。'
+          content: 'まずはあなたの性別を選択してください。'
         }
       },
       {
         human: true,
         type: 'component',
         options: {
-          content: 'FormGender'
+          content: 'FormCustomRadioGroup',
+          props: {
+            name: 'gender',
+            choices: {
+              '1': '男性', '2': '女性'
+            }
+          }
         }
       }
     ]
@@ -41,6 +72,7 @@ export const conversations = [
   {
     id: 'userInfo-name',
     trigger: 'userInfo-gender',
+    countable: true,
     actions: [
       {
         human: false,
@@ -61,6 +93,7 @@ export const conversations = [
   {
     id: 'userInfo-address',
     trigger: 'userInfo-name',
+    countable: true,
     actions: [
       {
         human: false,
@@ -81,6 +114,7 @@ export const conversations = [
   {
     id: 'userInfo-email',
     trigger: 'userInfo-address',
+    countable: true,
     actions: [
       {
         human: false,
@@ -101,12 +135,13 @@ export const conversations = [
   {
     id: 'userInfo-tel',
     trigger: 'userInfo-email',
+    countable: true,
     actions: [
       {
         human: false,
         type: 'message',
         options: {
-          content: 'お届けの事でご連絡する場合がありますので、繋がる電話番号をお願いします。'
+          content: '商品のお届けの事でご連絡する場合がありますので、繋がる電話番号をお願いします。'
         }
       },
       {
@@ -121,6 +156,7 @@ export const conversations = [
   {
     id: 'userInfo-birthday',
     trigger: 'userInfo-tel',
+    countable: true,
     actions: [
       {
         human: false,
@@ -141,160 +177,48 @@ export const conversations = [
   {
     id: 'userInfo-mailmagazine',
     trigger: 'userInfo-birthday',
+    countable: true,
     actions: [
       {
         human: false,
         type: 'message',
         options: {
-          content: 'neltureのお得情報などが届くメールマガジンに登録しますか？'
+          content: 'お得情報などが届くメールマガジンに登録しますか？'
         }
       },
       {
         human: true,
         type: 'component',
         options: {
-          content: 'FormMailMagazine'
+          content: 'FormCustomRadioGroup',
+          props: {
+            name: 'mailmagazine',
+            choices: { 'true': '登録する', 'false': '登録しない' }
+          }
         }
       }
     ]
   },
   {
-    id: 'deliveryPayment-delivery',
+    id: 'goodBey',
     trigger: 'userInfo-mailmagazine',
     actions: [
       {
         human: false,
-        type: 'function',
-        function: 'isSelectableDeriveryDateTime',
-        whenReturn: {
-          false: 'skip',
-          true: 'continue'
+        type: 'message',
+        options: {
+          delay: 3000,
+          content: 'いかがでしたでしょうか？'
         }
-      },
-      {
-        human: false,
-        type: 'function',
-        function: 'deliveryDateChoices'
-      },
-      {
-        human: false,
-        type: 'function',
-        function: 'deliveryTimeChoices'
       },
       {
         human: false,
         type: 'message',
         options: {
-          content: 'お届け日時の希望を選択してください。'
+          delay: 1000,
+          content: 'もしご興味がございましたら、ページ下部のフォームよりお問い合わせください。'
         }
       },
-      {
-        human: true,
-        type: 'component',
-        options: {
-          content: 'FormDeliveryDateTime'
-        }
-      }
     ]
   },
-  {
-    id: 'deliveryPayment-payment',
-    trigger: 'deliveryPayment-delivery',
-    actions: [
-      {
-        human: false,
-        type: 'function',
-        function: 'paymentMethods'
-      },
-      {
-        human: false,
-        type: 'message',
-        options: {
-          content: 'お支払い方法を選択してください。'
-        }
-      },
-      {
-        human: true,
-        type: 'component',
-        options: {
-          content: 'FormPayment'
-        }
-      }
-    ]
-  },
-  {
-    id: 'cashless',
-    trigger: 'deliveryPayment-payment',
-    actions: [
-      {
-        human: false,
-        type: 'function',
-        function: 'isCashLess',
-        whenReturn: {
-          false: 'skip',
-          true: 'continue'
-        }
-      },
-      {
-        human: false,
-        type: 'component',
-        options: {
-          content: 'CashLess'
-        }
-      }
-    ]
-  },
-  {
-    id: 'confirm',
-    trigger: 'cashless',
-    actions: [
-      {
-        human: false,
-        type: 'function',
-        function: 'confirm'
-      },
-      {
-        human: false,
-        type: 'message',
-        options: {
-          content: 'ご購入内容の確認を行い、お間違いがなければ確定ボタンをタップしてください。'
-        }
-      },
-      {
-        human: true,
-        type: 'component',
-        options: {
-          content: 'FormConfirm'
-        }
-      }
-    ]
-  },
-  {
-    id: 'conversion',
-    trigger: 'confirm',
-    actions: [
-      {
-        human: false,
-        type: 'message',
-        options: {
-          content: 'ご購入ありがとうございます。お手続きをしております。'
-        }
-      },
-      {
-        human: false,
-        type: 'function',
-        function: 'conversion',
-        whenReturn: {
-          true: 'continue'
-        }
-      },
-      {
-        human: false,
-        type: 'message',
-        options: {
-          content: 'お支払いページへ遷移します。'
-        }
-      }
-    ]
-  }
 ];
