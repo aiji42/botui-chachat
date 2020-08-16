@@ -20,7 +20,7 @@ export const conversations = [
         human: false,
         type: 'message',
         options: {
-          delay: 3000,
+          delay: 1800,
           content: 'いらっしゃいませ！案内にしたがってお手続きください。'
         }
       },
